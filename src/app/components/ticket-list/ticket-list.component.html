@@ -1,0 +1,132 @@
+<div [ngClass]="classCss" role="alert" *ngIf="message">
+  <span>{{ message.text }}</span>
+</div>
+
+<div class="row">
+  <div class="col-md-8">
+    <div class="box">
+      <div class="box-header with-border">
+        <h3 class="box-title">Lista de Tickets</h3>
+      </div>
+
+      <!-- FILTROS -->
+      <div class="box-body">
+        <div class="form-group" *ngIf="shared.user.profile == 'TECHNICIAN'">
+          <div class="checkbox">
+            <label>
+              <input 
+                type="checkbox" 
+                [(ngModel)]="assignedToMe" 
+                name="assignedToMe" 
+                id="assignedToMe">
+                <b>Atribuído a mim</b>
+             </label>
+            </div>
+          </div>
+          <div class="form-group">
+              <label for="inputNumber" class="col-sm-2 control-label">Número</label>
+              <div class="col-sm-10">
+                <input 
+                    type="number" 
+                    [(ngModel)]="ticketFilter.number" 
+                    class="form-control" 
+                    name="number" 
+                    id="inputNumber">
+              </div>
+          </div>
+          <div class="form-group">
+              <label for="inputTitle" class="col-sm-2 control-label">Título</label>
+              <div class="col-sm-10">
+                <input 
+                    type="text" 
+                    [(ngModel)]="ticketFilter.title" 
+                    class="form-control" 
+                    name="title" 
+                    id="inputTitle">
+              </div>
+          </div>
+          <div class="form-group">
+              <label for="inputStatus" class="col-sm-2 control-label">Status</label>
+              <div class="col-sm-10">
+                <select 
+                    type="text" 
+                    [(ngModel)]="ticketFilter.status" 
+                    class="form-control" 
+                    name="status" 
+                    id="inputStatus"
+                    style="width: 100%">
+                    <option>Novo</option>
+                    <option>Resolvido</option>
+                    <option>Aprovado</option>
+                    <option>Desaprovado</option>
+                    <option>Atribuído</option>
+                    <option>Finalizado</option>
+                </select>
+              </div>
+          </div>
+          <div class="form-group">
+              <label for="inputPriority" class="col-sm-2 control-label">Prioridade</label>
+              <div class="col-sm-10">
+                <select 
+                    type="text" 
+                    [(ngModel)]="ticketFilter.priority" 
+                    class="form-control" 
+                    name="priority" 
+                    id="inputPriority"
+                    style="width: 100%">
+                    <option>Alta</option>
+                    <option>Normal</option>
+                    <option>Baixa</option>
+                </select>
+              </div>
+          </div>
+        </div>
+      <div class="box-footer">
+        <button class="btn btn-info pull-left" (click)="cleanFilter();">Limpar</button>
+        <button style="margin-left: 10px;" class="btn btn-info pull-right" (click)="filter();">Filtrar</button>
+      </div>
+
+      <!-- TABELA -->
+      <div class="box-body">
+        <table class="table table-bordered">
+          <tr>
+            <th>Número</th>
+            <th>Título</th>
+            <th>Prioridade</th>
+            <th>Status</th>
+            <th>Proprietário</th>
+            <th style="width: 40px" *ngIf="shared.user.profile == 'CUSTOMER'">&nbsp;</th>
+            <th style="width: 40px" *ngIf="shared.user.profile == 'CUSTOMER'">&nbsp;</th>
+            <th style="width: 40px">&nbsp;</th>
+          </tr>
+          <tr *ngFor="let ticket of listTicket">
+            <td>{{ ticket.number }}</td>
+            <td>{{ ticket.title }}</td>
+            <td>{{ ticket.priority }}</td>
+            <td>{{ ticket.status }}</td>
+            <td>{{ ticket.user.email }}</td>
+            <td *ngIf="shared.user.profile == 'CUSTOMER'">
+              <button class="btn btn-primary" (click)="edit(ticket.id);">Editar</button>
+            </td>
+            <td *ngIf="shared.user.profile == 'CUSTOMER'">
+              <button class="btn btn-danger" (click)="delete(ticket.id);">Excluir</button>
+            </td>
+            <td>
+              <button class="btn btn-success" (click)="detail(ticket.id);">Detail</button>
+            </td>
+          </tr>
+        </table>
+      </div>
+
+      <div class="box-footer clearfix">
+        <ul class="pagination pagination-sm no-margin pull-right">
+          <li><a href="" (click)="setPreviousPage($event);">&laquo;</a></li>
+          <li *ngFor="let p of pages; let i = index">
+            <a [ngClass]="{'pagination-focus' : i == page}" href="" (click)="setPage(i, $event);">{{i+1}}</a>
+          </li>
+          <li><a href="" (click)="setNextPage($event);">&raquo;</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
